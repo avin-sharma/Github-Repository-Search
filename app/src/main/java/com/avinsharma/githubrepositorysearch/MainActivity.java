@@ -13,7 +13,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avinsharma.githubrepositorysearch.model.Repository;
+import com.avinsharma.githubrepositorysearch.utilities.JSONUtils;
 import com.avinsharma.githubrepositorysearch.utilities.NetworkUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mSearchButton;
     private TextView mSearchResultTextView;
     private ProgressBar mProgressBar;
+    private Repository[] mRepos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +81,31 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            try {
+                // Get the main JSON object from the String
+                JSONObject json = new JSONObject(s);
 
-            mSearchResultTextView.setText(s);
+                // Get all the repos
+                JSONArray repos = json.getJSONArray("items");
+
+                mRepos = new Repository[repos.length()];
+
+                // loop every repo and add the name to the TextView
+                for(int i = 0; i < repos.length(); i++){
+                    JSONObject repo = repos.getJSONObject(i);
+                    mRepos[i] = JSONUtils.parseRepositoryJSON(repo);
+                    mSearchResultTextView.append(mRepos[i].getName());
+                    if (mRepos[i].getDescription() != null){
+                        mSearchResultTextView.append("\n" + mRepos[i].getDescription());
+                    }
+                    mSearchResultTextView.append("\n\n");
+                }
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+
             mSearchResultTextView.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }
