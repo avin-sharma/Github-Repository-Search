@@ -1,6 +1,7 @@
 package com.avinsharma.githubrepositorysearch.utilities;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -34,7 +35,7 @@ public class NetworkUtils {
                 .appendQueryParameter(PARAM_QUERY, githubSearchQuery)
                 .appendQueryParameter(PARAM_SORT, sortBy)
                 .build();
-
+        Log.d("URL", builtUri.toString());
         URL url = null;
         try {
             url = new URL(builtUri.toString());
