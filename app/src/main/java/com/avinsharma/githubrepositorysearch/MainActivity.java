@@ -1,6 +1,8 @@
 package com.avinsharma.githubrepositorysearch;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -28,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText mSearchQueryEditText;
     private Button mSearchButton;
-    private TextView mSearchResultTextView;
     private ProgressBar mProgressBar;
     private Repository[] mRepos;
+    private RecyclerView mRepositoryRecyclerView;
+    private RepositoryAdapter mRepositoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +42,13 @@ public class MainActivity extends AppCompatActivity {
 
         mSearchQueryEditText = findViewById(R.id.et_search_bar);
         mSearchButton = findViewById(R.id.button_search);
-        mSearchResultTextView = findViewById(R.id.tv_search_result);
         mProgressBar = findViewById(R.id.pb_search);
+        mRepositoryRecyclerView = findViewById(R.id.rv_repo_list);
 
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String githubSearchQuery = mSearchQueryEditText.getText().toString();
-                Log.d("SEARCH", githubSearchQuery);
                 if(githubSearchQuery.equals("")){
                     Context context = v.getContext();
                     Toast.makeText(context, "Please enter a search term.", Toast.LENGTH_SHORT).show();
@@ -56,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
+        mRepositoryAdapter = new RepositoryAdapter();
+        mRepositoryRecyclerView.setLayoutManager(layoutManager);
+        mRepositoryRecyclerView.setAdapter(mRepositoryAdapter);
     }
 
     private class QueryGithubAPITask extends AsyncTask<URL, Void, String>{
@@ -64,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             // Hide Results
-            mSearchResultTextView.setVisibility(View.INVISIBLE);
+            mRepositoryRecyclerView.setVisibility(View.INVISIBLE);
             mProgressBar.setVisibility(View.VISIBLE);
         }
 
@@ -94,17 +102,13 @@ public class MainActivity extends AppCompatActivity {
                 for(int i = 0; i < repos.length(); i++){
                     JSONObject repo = repos.getJSONObject(i);
                     mRepos[i] = JSONUtils.parseRepositoryJSON(repo);
-                    mSearchResultTextView.append(mRepos[i].getName());
-                    if (mRepos[i].getDescription() != null){
-                        mSearchResultTextView.append("\n" + mRepos[i].getDescription());
-                    }
-                    mSearchResultTextView.append("\n\n");
                 }
+                mRepositoryAdapter.setmAllRepositories(mRepos);
             }catch (JSONException e){
                 e.printStackTrace();
             }
 
-            mSearchResultTextView.setVisibility(View.VISIBLE);
+            mRepositoryRecyclerView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
         }
     }
