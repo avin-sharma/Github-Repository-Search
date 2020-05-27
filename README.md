@@ -8,5 +8,5 @@ The goal is for the app to cover most of the core concepts in Android. On my blo
 3. [JSON Parsing](https://www.avinsharma.com/android-basics-json-parsing/)
 4. [RecyclerView - I](https://www.avinsharma.com/android-basics-recyclerview-I/)
 
-![App Screenshot](app.png)
+<img src="app.png" alt="app screenshot" width="130" height="237">
 
