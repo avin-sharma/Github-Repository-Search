@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RepositoryAdapter.ListItemClickListener{
 
     private EditText mSearchQueryEditText;
     private Button mSearchButton;
@@ -61,9 +61,14 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
-        mRepositoryAdapter = new RepositoryAdapter();
+        mRepositoryAdapter = new RepositoryAdapter(this);
         mRepositoryRecyclerView.setLayoutManager(layoutManager);
         mRepositoryRecyclerView.setAdapter(mRepositoryAdapter);
+    }
+
+    @Override
+    public void onListItemClick(int position) {
+        Toast.makeText(this, mRepos[position].getName(), Toast.LENGTH_SHORT).show();
     }
 
     private class QueryGithubAPITask extends AsyncTask<URL, Void, String>{
