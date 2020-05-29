@@ -7,6 +7,7 @@ The goal is for the app to cover most of the core concepts in Android. On my blo
 2. [AsyncTask](https://www.avinsharma.com/android-basics-async-task/)
 3. [JSON Parsing](https://www.avinsharma.com/android-basics-json-parsing/)
 4. [RecyclerView - I](https://www.avinsharma.com/android-basics-recyclerview-I/)
+5. [RecyclerView - II](https://www.avinsharma.com/android-basics-recyclerview-II/)
 
 <img src="app.png" alt="app screenshot" width="260" height="475">
 
