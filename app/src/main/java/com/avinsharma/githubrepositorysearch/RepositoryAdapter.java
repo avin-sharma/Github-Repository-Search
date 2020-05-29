@@ -14,9 +14,20 @@ import com.avinsharma.githubrepositorysearch.model.Repository;
 
 public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.RepositoryAdapterViewHolder> {
 
-    private Repository[] mAllRepositories;
+    private final String TAG = getClass().getSimpleName();
 
-    public static class RepositoryAdapterViewHolder extends RecyclerView.ViewHolder{
+    private Repository[] mAllRepositories;
+    final private ListItemClickListener mOnClickListener;
+
+    interface ListItemClickListener{
+        void onListItemClick(int position);
+    }
+
+    public RepositoryAdapter(ListItemClickListener onClickListener){
+        this.mOnClickListener = onClickListener;
+    }
+
+    public class RepositoryAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public final TextView mRepositoryName;
         public final TextView mRepositoryDescription;
         public final TextView mRepositoryStarCount;
@@ -32,6 +43,8 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
             this.mRepositoryLanguage = itemView.findViewById(R.id.tv_language);
             this.mRepositoryUpdatedAt = itemView.findViewById(R.id.tv_updated_at);
             this.mRepositoryLicense = itemView.findViewById(R.id.tv_license);
+
+            itemView.setOnClickListener(this);
         }
 
         private void bind(Repository repo){
@@ -62,6 +75,13 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
                 textView.setText(data);
                 textView.setVisibility(View.VISIBLE);
             }
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            mOnClickListener.onListItemClick(position);
+            Log.d(TAG, "Clicked!");
         }
     }
 
