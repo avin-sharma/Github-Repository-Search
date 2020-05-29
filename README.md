@@ -9,5 +9,5 @@ The goal is for the app to cover most of the core concepts in Android. On my blo
 4. [RecyclerView - I](https://www.avinsharma.com/android-basics-recyclerview-I/)
 5. [RecyclerView - II](https://www.avinsharma.com/android-basics-recyclerview-II/)
 
-<img src="app.png" alt="app screenshot" width="260" height="475">
+<img src="app.gif" alt="app screenshot" width="260" height="475">
 
