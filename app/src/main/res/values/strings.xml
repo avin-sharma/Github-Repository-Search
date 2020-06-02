@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Github Repository Search</string>
+    <string name="settings_menu_option_title">Settings</string>
 </resources>
