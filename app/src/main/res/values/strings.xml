@@ -1,4 +1,23 @@
 <resources>
     <string name="app_name">Github Repository Search</string>
+
+    <!-- Menu options title strings  -->
     <string name="settings_menu_option_title">Settings</string>
+
+    <!-- Sort By List Preference Strings   -->
+    <string name="pref_sort_by_summary">Select which parameter to sort the results of the query by</string>
+    <string name="pref_sort_by_key" translatable="false">sort-by</string>
+    <string name="pref_sort_by_label">Sort By</string>
+    
+    <string name="pref_sort_by_label_default">Default</string>
+    <string name="pref_sort_by_label_stars">Stars</string>
+    <string name="pref_sort_by_label_forks">Forks</string>
+    <string name="pref_sort_by_label_updated">Recently Updated</string>
+    <string name="pref_sort_by_label_help_wanted_issues">Help Wanted Issues</string>
+
+    <string name="pref_sort_by_key_default">default</string>
+    <string name="pref_sort_by_key_stars">stars</string>
+    <string name="pref_sort_by_key_forks">forks</string>
+    <string name="pref_sort_by_key_updated">updated</string>
+    <string name="pref_sort_by_key_help_wanted_issues">help-wanted-issues</string>
 </resources>

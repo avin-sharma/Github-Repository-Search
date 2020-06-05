@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="pref_repo_sort_by_option_labels">
+        <item>@string/pref_sort_by_label_default</item>
+        <item>@string/pref_sort_by_label_stars</item>
+        <item>@string/pref_sort_by_label_forks</item>
+        <item>@string/pref_sort_by_label_updated</item>
+        <item>@string/pref_sort_by_label_help_wanted_issues</item>
+    </array>
+
+    <array name="pref_repo_sort_by_option_values">
+        <item>@string/pref_sort_by_key_default</item>
+        <item>@string/pref_sort_by_key_stars</item>
+        <item>@string/pref_sort_by_key_forks</item>
+        <item>@string/pref_sort_by_key_updated</item>
+        <item>@string/pref_sort_by_key_help_wanted_issues</item>
+    </array>
+</resources>
