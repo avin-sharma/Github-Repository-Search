@@ -22,7 +22,7 @@ public class NetworkUtils {
      * Default: results are sorted by best match if no field is specified.
      */
     private final static String PARAM_SORT = "sort";
-    private final static String sortBy = "stars";
+    private final static String sortBy = "updated";
 
     /**
      * Builds the URL used to query GitHub.
