@@ -2,11 +2,13 @@ package com.avinsharma.githubrepositorysearch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,7 +33,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity implements RepositoryAdapter.ListItemClickListener{
+public class MainActivity extends AppCompatActivity implements RepositoryAdapter.ListItemClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private EditText mSearchQueryEditText;
     private Button mSearchButton;
@@ -53,14 +55,7 @@ public class MainActivity extends AppCompatActivity implements RepositoryAdapter
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String githubSearchQuery = mSearchQueryEditText.getText().toString();
-                if(githubSearchQuery.equals("")){
-                    Context context = v.getContext();
-                    Toast.makeText(context, "Please enter a search term.", Toast.LENGTH_SHORT).show();
-                }else{
-                    URL url = NetworkUtils.buildUrl(githubSearchQuery);
-                    new QueryGithubAPITask().execute(url);
-                }
+                searchGithub();
             }
         });
 
@@ -69,11 +64,42 @@ public class MainActivity extends AppCompatActivity implements RepositoryAdapter
         mRepositoryAdapter = new RepositoryAdapter(this);
         mRepositoryRecyclerView.setLayoutManager(layoutManager);
         mRepositoryRecyclerView.setAdapter(mRepositoryAdapter);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    private void searchGithub() {
+
+        String githubSearchQuery = mSearchQueryEditText.getText().toString();
+        Context context = MainActivity.this;
+
+        if(githubSearchQuery.equals("")){
+            Toast.makeText(context, "Please enter a search term.", Toast.LENGTH_SHORT).show();
+        }else{
+            URL url = NetworkUtils.buildUrl(githubSearchQuery, PreferenceManager.getDefaultSharedPreferences(context).getString(getString(R.string.pref_sort_by_key), null));
+            new QueryGithubAPITask().execute(url);
+        }
     }
 
     @Override
     public void onListItemClick(int position) {
         Toast.makeText(this, mRepos[position].getName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.d("Key", key);
+        if (key.equals(getString(R.string.pref_sort_by_key))){
+            searchGithub();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     private class QueryGithubAPITask extends AsyncTask<URL, Void, String>{
