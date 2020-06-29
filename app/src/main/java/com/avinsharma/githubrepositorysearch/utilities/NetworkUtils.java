@@ -22,7 +22,7 @@ public class NetworkUtils {
      * Default: results are sorted by best match if no field is specified.
      */
     private final static String PARAM_SORT = "sort";
-    private final static String sortBy = "updated";
+//    private final static String sortBy = "updated";
 
     /**
      * Builds the URL used to query GitHub.
@@ -30,7 +30,7 @@ public class NetworkUtils {
      * @param githubSearchQuery The keyword that will be queried for.
      * @return The URL to use to query the GitHub server.
      */
-    public static URL buildUrl(String githubSearchQuery) {
+    public static URL buildUrl(String githubSearchQuery, String sortBy) {
         Uri builtUri = Uri.parse(GITHUB_BASE_URL).buildUpon()
                 .appendQueryParameter(PARAM_QUERY, githubSearchQuery)
                 .appendQueryParameter(PARAM_SORT, sortBy)
