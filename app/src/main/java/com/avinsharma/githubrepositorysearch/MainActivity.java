@@ -2,6 +2,8 @@ package com.avinsharma.githubrepositorysearch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,10 +21,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.avinsharma.githubrepositorysearch.model.Repository;
+import com.avinsharma.githubrepositorysearch.model.GithubRepository;
 import com.avinsharma.githubrepositorysearch.utilities.JSONUtils;
 import com.avinsharma.githubrepositorysearch.utilities.NetworkUtils;
 
@@ -38,9 +39,10 @@ public class MainActivity extends AppCompatActivity implements RepositoryAdapter
     private EditText mSearchQueryEditText;
     private Button mSearchButton;
     private ProgressBar mProgressBar;
-    private Repository[] mRepos;
+    private GithubRepository[] mRepos;
     private RecyclerView mRepositoryRecyclerView;
     private RepositoryAdapter mRepositoryAdapter;
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,16 @@ public class MainActivity extends AppCompatActivity implements RepositoryAdapter
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        viewModel.getRepos().observe(this, new Observer<GithubRepository[]>() {
+            @Override
+            public void onChanged(GithubRepository[] githubRepositories) {
+                mRepositoryAdapter.setmAllRepositories(githubRepositories);
+                mRepositoryRecyclerView.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void searchGithub() {
@@ -78,7 +90,11 @@ public class MainActivity extends AppCompatActivity implements RepositoryAdapter
             Toast.makeText(context, "Please enter a search term.", Toast.LENGTH_SHORT).show();
         }else{
             URL url = NetworkUtils.buildUrl(githubSearchQuery, PreferenceManager.getDefaultSharedPreferences(context).getString(getString(R.string.pref_sort_by_key), null));
-            new QueryGithubAPITask().execute(url);
+//            new QueryGithubAPITask().execute(url);
+            viewModel.searchGithub(url);
+            // Hide Results
+            mRepositoryRecyclerView.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -102,52 +118,52 @@ public class MainActivity extends AppCompatActivity implements RepositoryAdapter
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    private class QueryGithubAPITask extends AsyncTask<URL, Void, String>{
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // Hide Results
-            mRepositoryRecyclerView.setVisibility(View.INVISIBLE);
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected String doInBackground(URL... urls) {
-            try {
-                return NetworkUtils.getResponseFromHttpUrl(urls[0]);
-            }catch (IOException e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            try {
-                // Get the main JSON object from the String
-                JSONObject json = new JSONObject(s);
-
-                // Get all the repos
-                JSONArray repos = json.getJSONArray("items");
-
-                mRepos = new Repository[repos.length()];
-
-                // loop every repo and add the name to the TextView
-                for(int i = 0; i < repos.length(); i++){
-                    JSONObject repo = repos.getJSONObject(i);
-                    mRepos[i] = JSONUtils.parseRepositoryJSON(repo);
-                }
-                mRepositoryAdapter.setmAllRepositories(mRepos);
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
-
-            mRepositoryRecyclerView.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.GONE);
-        }
-    }
+//    private class QueryGithubAPITask extends AsyncTask<URL, Void, String>{
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            // Hide Results
+//            mRepositoryRecyclerView.setVisibility(View.INVISIBLE);
+//            mProgressBar.setVisibility(View.VISIBLE);
+//        }
+//
+//        @Override
+//        protected String doInBackground(URL... urls) {
+//            try {
+//                return NetworkUtils.getResponseFromHttpUrl(urls[0]);
+//            }catch (IOException e){
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String s) {
+//            super.onPostExecute(s);
+//            try {
+//                // Get the main JSON object from the String
+//                JSONObject json = new JSONObject(s);
+//
+//                // Get all the repos
+//                JSONArray repos = json.getJSONArray("items");
+//
+//                mRepos = new GithubRepository[repos.length()];
+//
+//                // loop every repo and add the name to the TextView
+//                for(int i = 0; i < repos.length(); i++){
+//                    JSONObject repo = repos.getJSONObject(i);
+//                    mRepos[i] = JSONUtils.parseRepositoryJSON(repo);
+//                }
+//                mRepositoryAdapter.setmAllRepositories(mRepos);
+//            }catch (JSONException e){
+//                e.printStackTrace();
+//            }
+//
+//            mRepositoryRecyclerView.setVisibility(View.VISIBLE);
+//            mProgressBar.setVisibility(View.GONE);
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -1,13 +1,14 @@
 package com.avinsharma.githubrepositorysearch.utilities;
 
-import com.avinsharma.githubrepositorysearch.model.Repository;
+import com.avinsharma.githubrepositorysearch.model.GithubRepository;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class JSONUtils {
-    public static Repository parseRepositoryJSON(JSONObject repo){
-        Repository newRepository = null;
+    public static GithubRepository parseRepositoryJSON(JSONObject repo){
+        GithubRepository newGithubRepository = null;
 
         try {
             String name = repo.getString("name");
@@ -30,12 +31,34 @@ public class JSONUtils {
                 license = repo.getJSONObject("license").getString("spdx_id");
             }
 
-            newRepository = new Repository(name, description, stargazersCount, language, updatedAt, license);
+            newGithubRepository = new GithubRepository(name, description, stargazersCount, language, updatedAt, license);
 
         }catch (JSONException e){
             e.printStackTrace();
         }
 
-        return newRepository;
+        return newGithubRepository;
+    }
+
+    public static GithubRepository[] convertJsonStringToGithubRepos(String jsonString){
+        try {
+            // Get the main JSON object from the String
+            JSONObject json = new JSONObject(jsonString);
+
+            // Get all the repos
+            JSONArray repos = json.getJSONArray("items");
+
+            GithubRepository[] githubRepositories = new GithubRepository[repos.length()];
+
+            // loop every repo and add the name to the TextView
+            for(int i = 0; i < repos.length(); i++){
+                JSONObject repo = repos.getJSONObject(i);
+                githubRepositories[i] = JSONUtils.parseRepositoryJSON(repo);
+            }
+            return githubRepositories;
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

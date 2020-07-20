@@ -1,6 +1,6 @@
 package com.avinsharma.githubrepositorysearch.model;
 
-public class Repository {
+public class GithubRepository {
     private String name = null;
     private String description = null;
     private Integer stargazersCount = null;
@@ -8,7 +8,7 @@ public class Repository {
     private String updatedAt = null;
     private String license = null;
 
-    public Repository(String name, String description, Integer stargazersCount, String language, String updatedAt, String license) {
+    public GithubRepository(String name, String description, Integer stargazersCount, String language, String updatedAt, String license) {
         this.name = name;
         this.description = description;
         this.stargazersCount = stargazersCount;
