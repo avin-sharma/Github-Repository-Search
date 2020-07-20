@@ -52,7 +52,7 @@ public class Repository {
             }
 
             // Set value of out LiveData(Mutable)
-            mRepos.setValue(githubRepositories);
+            mRepos.postValue(githubRepositories);
         }catch (IOException | JSONException e){
             e.printStackTrace();
         }

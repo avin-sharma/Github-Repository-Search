@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements RepositoryAdapter
         viewModel.getRepos().observe(this, new Observer<GithubRepository[]>() {
             @Override
             public void onChanged(GithubRepository[] githubRepositories) {
+                mRepos = githubRepositories;
                 mRepositoryAdapter.setmAllRepositories(githubRepositories);
                 mRepositoryRecyclerView.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
