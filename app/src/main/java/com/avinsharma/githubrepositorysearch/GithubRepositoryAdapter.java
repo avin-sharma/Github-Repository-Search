@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.avinsharma.githubrepositorysearch.model.GithubRepository;
 
-public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.RepositoryAdapterViewHolder> {
+public class GithubRepositoryAdapter extends RecyclerView.Adapter<GithubRepositoryAdapter.RepositoryAdapterViewHolder> {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -23,7 +23,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
         void onListItemClick(int position);
     }
 
-    public RepositoryAdapter(ListItemClickListener onClickListener){
+    public GithubRepositoryAdapter(ListItemClickListener onClickListener){
         this.mOnClickListener = onClickListener;
     }
 
