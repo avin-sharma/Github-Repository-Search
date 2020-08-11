@@ -18,9 +18,18 @@ public class Repository {
     private MutableLiveData<GithubRepository[]> mRepos = new MutableLiveData<>();
     private Thread mThread;
 
+    /**
+     * @return mRepo    A MutableLiveData object casted as
+     *                  a LiveData object.
+     */
     public LiveData<GithubRepository[]> getRepos(){
         return mRepos;
     }
+
+    /**
+     * Creates a new background thread and queries the Github API.
+     * @param url
+     */
     public void searchGithub(final URL url){
         Runnable fetchJsonRunnable = new Runnable() {
             @Override
@@ -40,6 +49,14 @@ public class Repository {
         mThread.start();
     }
 
+    /**
+     * A method which queries the Github API to fetch the results
+     * for the term we searched. Does not run asynchronously and
+     * needs to be called in a thread off the main UI thread.
+     * Updates mRepo.
+     *
+     * @param url
+     */
     private void queryGithubSearchApi(URL url) {
         try {
             String response = NetworkUtils.getResponseFromHttpUrl(url);
