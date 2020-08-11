@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,24 +23,18 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.avinsharma.githubrepositorysearch.model.GithubRepository;
-import com.avinsharma.githubrepositorysearch.utilities.JSONUtils;
 import com.avinsharma.githubrepositorysearch.utilities.NetworkUtils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity implements RepositoryAdapter.ListItemClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity implements GithubRepositoryAdapter.ListItemClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private EditText mSearchQueryEditText;
     private Button mSearchButton;
     private ProgressBar mProgressBar;
     private GithubRepository[] mRepos;
     private RecyclerView mRepositoryRecyclerView;
-    private RepositoryAdapter mRepositoryAdapter;
+    private GithubRepositoryAdapter mGithubRepositoryAdapter;
     private MainViewModel viewModel;
 
     @Override
@@ -63,9 +56,9 @@ public class MainActivity extends AppCompatActivity implements RepositoryAdapter
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
-        mRepositoryAdapter = new RepositoryAdapter(this);
+        mGithubRepositoryAdapter = new GithubRepositoryAdapter(this);
         mRepositoryRecyclerView.setLayoutManager(layoutManager);
-        mRepositoryRecyclerView.setAdapter(mRepositoryAdapter);
+        mRepositoryRecyclerView.setAdapter(mGithubRepositoryAdapter);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -75,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements RepositoryAdapter
             @Override
             public void onChanged(GithubRepository[] githubRepositories) {
                 mRepos = githubRepositories;
-                mRepositoryAdapter.setmAllRepositories(githubRepositories);
+                mGithubRepositoryAdapter.setmAllRepositories(githubRepositories);
                 mRepositoryRecyclerView.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
             }
@@ -119,52 +112,6 @@ public class MainActivity extends AppCompatActivity implements RepositoryAdapter
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
-//    private class QueryGithubAPITask extends AsyncTask<URL, Void, String>{
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            // Hide Results
-//            mRepositoryRecyclerView.setVisibility(View.INVISIBLE);
-//            mProgressBar.setVisibility(View.VISIBLE);
-//        }
-//
-//        @Override
-//        protected String doInBackground(URL... urls) {
-//            try {
-//                return NetworkUtils.getResponseFromHttpUrl(urls[0]);
-//            }catch (IOException e){
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String s) {
-//            super.onPostExecute(s);
-//            try {
-//                // Get the main JSON object from the String
-//                JSONObject json = new JSONObject(s);
-//
-//                // Get all the repos
-//                JSONArray repos = json.getJSONArray("items");
-//
-//                mRepos = new GithubRepository[repos.length()];
-//
-//                // loop every repo and add the name to the TextView
-//                for(int i = 0; i < repos.length(); i++){
-//                    JSONObject repo = repos.getJSONObject(i);
-//                    mRepos[i] = JSONUtils.parseRepositoryJSON(repo);
-//                }
-//                mRepositoryAdapter.setmAllRepositories(mRepos);
-//            }catch (JSONException e){
-//                e.printStackTrace();
-//            }
-//
-//            mRepositoryRecyclerView.setVisibility(View.VISIBLE);
-//            mProgressBar.setVisibility(View.GONE);
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
