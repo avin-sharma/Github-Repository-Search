@@ -10,13 +10,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.avinsharma.githubrepositorysearch.model.Repository;
+import com.avinsharma.githubrepositorysearch.model.GithubRepository;
 
 public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.RepositoryAdapterViewHolder> {
 
     private final String TAG = getClass().getSimpleName();
 
-    private Repository[] mAllRepositories;
+    private GithubRepository[] mAllRepositories;
     final private ListItemClickListener mOnClickListener;
 
     interface ListItemClickListener{
@@ -47,7 +47,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
             itemView.setOnClickListener(this);
         }
 
-        private void bind(Repository repo){
+        private void bind(GithubRepository repo){
             String name = repo.getName();
             String description = repo.getDescription();
             Integer stargazersCount = repo.getStargazersCount();
@@ -106,7 +106,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
         return mAllRepositories.length;
     }
 
-    public void setmAllRepositories(Repository[] repositories){
+    public void setmAllRepositories(GithubRepository[] repositories){
         mAllRepositories = repositories;
         notifyDataSetChanged();
     }
